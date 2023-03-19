@@ -1,0 +1,30 @@
+.chat-page-root {
+    flex: 1;
+    display: flex;
+    background-color: pink;
+    flex: 1;
+    flex-direction: column;
+    margin: 50px;
+    border: 2px solid black;
+
+    .messages-container {
+        flex: 1;
+    }
+
+    .send-message-container {
+        display: flex;
+        width: 100%;
+        border-top: 1px solid black;
+
+
+        .message-sending-form {
+            display: flex;
+            flex: 1;
+
+            .message-input {
+                flex: 1;
+            }
+        }
+    }
+    
+}
