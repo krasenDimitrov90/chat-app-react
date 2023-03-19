@@ -12,7 +12,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   display: flex;
-  width: 100vw;
+  /* width: 100vw; */
 }
 
 code {
@@ -25,5 +25,4 @@ code {
   display: flex;
   flex: 1;
   height: 100vh;
-
 }

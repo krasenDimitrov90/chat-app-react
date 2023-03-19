@@ -1,9 +1,17 @@
 import './App.css';
-import ChatPage from './pages/ChatPage';
+import { SocketContextProvider } from './context/socket-context';
+import ChatPage from './pages/ChatPage/ChatPage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import API from './servicies/api';
+
+window.api = new API;
 
 function App() {
   return (
-    <ChatPage />
+    <SocketContextProvider>
+      {/* <ChatPage /> */}
+      <LoginPage />
+    </SocketContextProvider>
   )
 }
 

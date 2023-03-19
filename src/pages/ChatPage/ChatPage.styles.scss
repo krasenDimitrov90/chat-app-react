@@ -2,13 +2,13 @@
     flex: 1;
     display: flex;
     background-color: pink;
-    flex: 1;
     flex-direction: column;
     margin: 50px;
     border: 2px solid black;
 
     .messages-container {
         flex: 1;
+        overflow-y: auto;
     }
 
     .send-message-container {
