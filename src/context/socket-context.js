@@ -28,15 +28,25 @@ const SocketContextProvider = ({ children }) => {
             console.log(socket.id);
         });
 
+        socket.on('unreceived-messages', (messages, from) => {
+            setMessages(prev => {
+                let newMessages = [...prev];
+                messages.reduce((acc, message) => {
+                    acc.push({ message, isOwner: false });
+                    return acc;
+                }, newMessages);
+                console.log(newMessages);
+                return newMessages;
+            });
+        });
+
         socket.on('recieve-message', (message) => {
             console.log(message);
             setMessages(prev => [...prev, { message, isOwner: false }]);
         });
 
         socket.on('users', (users) => {
-            console.log('IN USERS Reciver');
             setUsers(users);
-
         });
 
         socket.on('private-message', ({ message, from }) => {
@@ -44,11 +54,17 @@ const SocketContextProvider = ({ children }) => {
             setMessages(prev => [...prev, { message, isOwner: false }]);
         });
 
+        socket.on('user-left', (userId) => {
+            console.log(userId + ' has left');
+        });
+
         return () => {
             socket.off('connect');
             socket.off('recieve-message');
             socket.off('users');
             socket.off('private-message');
+            socket.off('user-left');
+            socket.off('unreceived-messages');
         };
     }, [userToken]);
 
