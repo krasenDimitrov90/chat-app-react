@@ -5,6 +5,7 @@ import './App.css';
 import { AuthProvider } from './context/auth-context';
 import { SocketContextProvider } from './context/socket-context';
 import ChatPage from './pages/ChatPage/ChatPage';
+import DashBoardPage from './pages/DashBoardPage/DashBoardPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 
 const router = createBrowserRouter([
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
       { index: true, element: <Navigate to="/login" replace /> },
       { path: '/login', element: <LoginPage /> },
       { path: '/chat', element: <ChatPage /> },
+      { path: '/dashboard', element: <DashBoardPage /> },
     ]
   }
 ]);

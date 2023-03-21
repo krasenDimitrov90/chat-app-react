@@ -1,14 +1,16 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import Message from "../../components/Message";
 import { useSocket } from "../../context/socket-context";
-import { socket } from "../../socket";
 
 import './ChatPage.styles.scss';
 
 const ChatPage = () => {
 
+    const location = useLocation();
+    const { peerId } = location.state || '';
 
-    const {messages, sendMessage, sendPrivateMessage} = useSocket();
+    const { messages, sendMessage, sendPrivateMessage } = useSocket();
     const [message, setMessage] = React.useState('');
     const [recieverId, setRecieverId] = React.useState('');
 
@@ -17,8 +19,7 @@ const ChatPage = () => {
     const sendMessageHandler = (e) => {
         e.preventDefault();
 
-        // sendMessage(message);
-        sendPrivateMessage(message, recieverId);
+        sendPrivateMessage(message, peerId);
     };
 
 
@@ -31,7 +32,7 @@ const ChatPage = () => {
                         <Message key={m.message + i} message={m.message} isOwner={m.isOwner} />
                     );
                 })}
-                
+
             </div>
             <div className="send-message-container">
                 <form className="message-sending-form" >
@@ -39,7 +40,7 @@ const ChatPage = () => {
                         <input type="text" placeholder="Enter message"
                             onChange={(e) => setMessage(e.target.value)}
                             value={message}
-                         />
+                        />
                     </div>
                     <div className="send-message-btn">
                         <button onClick={sendMessageHandler}  >SEND</button>

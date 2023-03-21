@@ -1,96 +1,65 @@
-export default class API {
-    constructor() {
-        this.config = {};
-        this.login_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB0dqaMV0xMmpNH3wM-nAhgVjeD5R0xjU8';
-        this.register_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB0dqaMV0xMmpNH3wM-nAhgVjeD5R0xjU8';
-        this.host = 'https://inventory-app-3f096-default-rtdb.europe-west1.firebasedatabase.app';
-        this.uri = '';
+
+const request = (method, url, requestConfig = {}) => {
+
+    const { data, id, token, path } = requestConfig;
+    const options = {};
+
+    if (method !== 'GET') {
+        options.method = method;
+        options.headers = { "Content-Type": "application/json" };
+        options.body = JSON.stringify(data);
     }
 
-    static #request(method, requestConfig, callBack, url = this.host) {
-        API.#prepareRequestData(method, requestConfig, url);
+    if (path) {
+        url = `${url}/${path}`;
 
-        return fetch(this.uri, this.config)
-            .then(res => API.#handleResponse(res))
-            .then(data => {
-                if ((typeof callBack) === 'function') {
-                    callBack(data);
-                }
-            })
-            .catch(err => {
-                err.then(API.#handleError(callBack));
-            });
-    }
-
-    static #prepareRequestData(method, requestConfig, URL) {
-        const { data, id, token, path } = requestConfig;
-        const options = {};
-        let url = URL || this.host;
-
-        if (method !== 'GET') {
-            options.method = method;
-            options.headers = { "Content-Type": "application/json" };
-            options.body = JSON.stringify(data);
+        if (id) {
+            url = `${url}/${id}.json`;
+        } else {
+            url = `${url}.json`;
         }
+    }
 
-        if (path) {
-            url = `${url}/${path}`;
 
-            if (id) {
-                url = `${url}/${id}.json`;
-            } else {
-                url = `${url}.json`;
+
+    if (token) {
+        url += `?auth=${token}`;
+    }
+
+
+    return fetch(url, options)
+        .then(res => {
+            if (!res.ok) {
+                throw res.json();
             }
-        }
-
-        if (token) {
-            url += `?auth=${token}`;
-        }
-        this.uri = url;
-        this.config = { ...options };
-    }
-    static #handleResponse(res) {
-        console.log(res);
-
-        this.uri = '';
-        this.config = {};
-
-        if (!res.ok) {
-            throw res.json();
-        }
-        return res.json();
-    }
-
-    static #handleError(callBack) {
-
-        return function errorHandle(err) {
-            callBack(err);
-        }
-    }
-
-
-    get(requestConfig, callBack) {
-        return API.#request('GET', requestConfig, callBack);
-    }
-    post(requestConfig, callBack) {
-        return API.#request('POST', requestConfig, callBack);
-    }
-    patch(requestConfig, callBack) {
-        return API.#request('PATCH', requestConfig, callBack);
-    }
-    put(requestConfig, callBack) {
-        return API.#request('PUT', requestConfig, callBack);
-    }
-    del(requestConfig, callBack) {
-        return API.#request('DELETE', requestConfig, callBack);
-    }
-
-
-    login(requestConfig, callBack) {
-        return API.#request('POST', requestConfig, callBack, this.login_URL);
-    }
-    register(requestConfig, callBack) {
-        return API.#request('POST', requestConfig, callBack, this.register_URL);
-    }
+            return res.json();
+        })
+        .then(data => {
+            console.log(data);
+            if (data === null) {
+                return {};
+            }
+            return data;
+        })
+        .catch(error => {
+            throw error;
+        })
 }
+
+
+export const api = {
+    login_URL: 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDTiWEXA80npiCFJjTRNGSxpdj2N2GinmU',
+    register_URL: 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDTiWEXA80npiCFJjTRNGSxpdj2N2GinmU',
+    host: 'https://chat-app-api-6bd4d-default-rtdb.europe-west1.firebasedatabase.app',
+
+    get: (requestConfig) => request('GET', api.host, requestConfig),
+    post: (requestConfig) => request('POST', api.host, requestConfig),
+    put: (requestConfig) => request('PUT', api.host, requestConfig),
+    patch: (requestConfig) => request('PATCH', api.host, requestConfig),
+    del: (requestConfig) => request('DELETE', api.host, requestConfig),
+
+    login: (requestConfig) => request('POST', api.login_URL, requestConfig),
+    register: (requestConfig) => request('POST', api.register_URL, requestConfig),
+};
+
 

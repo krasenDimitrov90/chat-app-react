@@ -1,0 +1,12 @@
+.peer-container {
+    display: flex;
+    border: 1px solid black;
+}
+.peer-container > p {
+    border-right: 1px solid black;
+    padding: 8px;
+}
+
+.peer-container > a {
+    padding: 8px;
+}

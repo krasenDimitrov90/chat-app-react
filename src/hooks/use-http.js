@@ -1,42 +1,40 @@
 import React from "react";
-import API from "../servicies/api";
+import { api } from "../servicies/api";
 
-const api = new API();
 
 const useHttp = () => {
-    const [isLoding, setIsLoading] = React.useState(false);
+
+    const [isLoading, setIsloading] = React.useState(false);
     const [error, setError] = React.useState(null);
 
-    const afterRequestFinished = React.useCallback((callBack) => {
-
-        return function (result) {
-            setIsLoading(false);
-            console.log(result);
-            if (result.hasOwnProperty("error")) {
-                setError(result.error);
-                return callBack(result.error);
-            }
-            callBack(result);
-        }
-        
-    }, [])
-
-    const sendRequest = React.useCallback((requestConfig, callBack) => {
+    const sendRequest = React.useCallback((requestConfig, dataHandler, errorHandler) => {
 
         const action = requestConfig.action;
-
-        setIsLoading(true);
+        
         setError(null);
-        api[action](requestConfig, afterRequestFinished(callBack));
+        setIsloading(true);
+        return api[action](requestConfig)
+            .then(data => {
+                dataHandler(data);
+                setIsloading(false);
+            })
+            .catch(err => {
+                console.log(err);
+                err.then(error => {
+                    const errorMessage = error.error.message || error.error;
+                    setIsloading(false);
+                    errorHandler();
+                    setError(errorMessage);
+                })
+            });
+    },[])
 
-    }, []);
 
     return {
-        sendRequest,
-        isLoding,
+        isLoading,
         error,
+        sendRequest,
     };
-
 };
 
 export default useHttp;
