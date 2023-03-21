@@ -11,9 +11,10 @@ const useHttp = () => {
 
         return function (result) {
             setIsLoading(false);
+            console.log(result);
             if (result.hasOwnProperty("error")) {
                 setError(result.error);
-                return callBack(error);
+                return callBack(result.error);
             }
             callBack(result);
         }

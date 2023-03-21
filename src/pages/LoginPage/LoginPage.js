@@ -1,15 +1,24 @@
 import React from "react";
+import { useAuthContext } from "../../context/auth-context";
 import useHttp from "../../hooks/use-http";
+import { socket } from "../../socket";
 
 
 const LoginPage = () => {
 
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const { sendRequest, isLoding, error } = useHttp();
+    const { sendRequest, isLoding, error, data } = useHttp();
+    const { login } = useAuthContext();
 
     const onEmailInputChange = (e) => setEmail(e.target.value);
     const onPasswordInputChange = (e) => setPassword(e.target.value);
+
+    const loginHandler = (userData) => {
+        if (userData.hasOwnProperty('idToken')) {
+            login(userData.idToken, userData.localId, userData.email);
+        }
+    };
 
     const submitLogin = (e) => {
 
@@ -22,7 +31,7 @@ const LoginPage = () => {
         };
 
         const requestConfig = { data, action: 'login' };
-        sendRequest(requestConfig, (result) => console.log(result));
+        sendRequest(requestConfig, loginHandler);
 
     };
 
@@ -30,7 +39,7 @@ const LoginPage = () => {
 
     return (
         <>
-            {isLoding && <h1>Loading.............</h1> }
+            {isLoding && <h1>Loading.............</h1>}
             {!isLoding && <div>
                 <form onSubmit={submitLogin}>
                     <input onChange={onEmailInputChange} value={email} type="text" placeholder="Enter email" />

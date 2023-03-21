@@ -8,20 +8,23 @@ import './ChatPage.styles.scss';
 const ChatPage = () => {
 
 
-    const {messages, sendMessage} = useSocket();
+    const {messages, sendMessage, sendPrivateMessage} = useSocket();
     const [message, setMessage] = React.useState('');
+    const [recieverId, setRecieverId] = React.useState('');
 
+    const inputRecieverIdOnChangeHandler = (e) => setRecieverId(e.target.value);
 
     const sendMessageHandler = (e) => {
         e.preventDefault();
 
-        sendMessage(message);
+        // sendMessage(message);
+        sendPrivateMessage(message, recieverId);
     };
 
-    console.log(messages);
 
     return (
         <div className="chat-page-root">
+            <input type="text" value={recieverId} onChange={inputRecieverIdOnChangeHandler} />
             <div className="messages-container">
                 {messages.map((m, i) => {
                     return (
