@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import Message from "../../components/Message";
+import { useMessagesContext } from "../../context/messages-context";
 import { useSocket } from "../../context/socket-context";
 
 import './ChatPage.styles.scss';
@@ -10,22 +11,29 @@ const ChatPage = () => {
     const location = useLocation();
     const { peerId } = location.state || '';
 
-    const { messages, sendMessage, sendPrivateMessage } = useSocket();
+    const {   sendPrivateMessage } = useSocket();
+    const {getMessagesFromPeer, setMessagesHandler} = useMessagesContext();
+    const messages = getMessagesFromPeer(peerId);
+    // const { sendPrivateMessage } = useSocket();
+    // const [messages, setMessages] = React.useState([]);
     const [message, setMessage] = React.useState('');
-    const [recieverId, setRecieverId] = React.useState('');
 
-    const inputRecieverIdOnChangeHandler = (e) => setRecieverId(e.target.value);
+    // React.useEffect(() => {
+    //     const unreceivedMessages = JSON.parse(localStorage.getItem('messagesFrom:' + peerId)) || [];
+    //     setMessages((prev) => [...prev, ...unreceivedMessages]);
+    // },[]);
 
+    console.log(messages);
     const sendMessageHandler = (e) => {
         e.preventDefault();
 
         sendPrivateMessage(message, peerId);
+        setMessagesHandler([{ message, isOwner: true }], peerId);
     };
 
 
     return (
         <div className="chat-page-root">
-            <input type="text" value={recieverId} onChange={inputRecieverIdOnChangeHandler} />
             <div className="messages-container">
                 {messages.map((m, i) => {
                     return (
