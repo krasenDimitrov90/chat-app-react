@@ -1,13 +1,35 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
+import { useMessagesContext } from "../../context/messages-context";
+import { useSocket } from "../../context/socket-context";
 import { SVG } from "../../SVG";
 import Message from "../Message/Message";
 
-const Chat = ({ online }) => {
+const Chat = ({ peerId, name, online }) => {
+
+
+    const location = useLocation();
+    // const { peerId } = location.state || '';
+
+    const { sendPrivateMessage } = useSocket();
+    const { getMessagesFromPeer, setMessagesHandler } = useMessagesContext();
+    const messages = getMessagesFromPeer(peerId);
+    const [message, setMessage] = React.useState('');
+
+    let currentMessageOwner = null;
+
+    const sendMessageHandler = (e) => {
+        e.preventDefault();
+
+        sendPrivateMessage(message, peerId);
+        setMessagesHandler([{ message, isOwner: true }], peerId);
+    };
+
     return (
         <div className="flex flex-[3] flex-col">
             <div className=" bg-[#5e5c8e] flex py-[20px] ">
                 <div className="px-[20px]">
-                    <h3>CONTACT NAME</h3>
+                    <h3>{name}</h3>
                 </div>
                 <div className="flex">
                     <div className="flex items-center mr-[6px]">
@@ -17,26 +39,34 @@ const Chat = ({ online }) => {
                 </div>
             </div>
             <div className=" bg-[#dcdef7] flex-1 overflow-y-scroll scroll-hide">
-                <Message side={'left'} hasAvatar={true} />
-                <Message side={'right'} hasAvatar={true} />
-                <Message side={'right'} hasAvatar={false} />
-                <Message side={'right'} hasAvatar={false} />
-                <Message side={'left'} hasAvatar={true} />
-                <Message side={'left'} hasAvatar={false} />
-                <Message side={'left'} hasAvatar={false} />
-                <Message side={'left'} hasAvatar={false} />
+                {messages.map((m, i) => {
+                    const side = m.isOwner ? 'right' : 'left';
+                    let hasAvatar;
+                    if (i === 0) {
+                        currentMessageOwner = m.isOwner;
+                        hasAvatar = true;
+                    } else {
+                        hasAvatar = currentMessageOwner === m.isOwner ? false : true;
+                        currentMessageOwner = m.isOwner;
+                    }
+                    return (
+                        <Message message={m.message} side={side} hasAvatar={hasAvatar} />
+                    );
+                })}
             </div>
             <div className="bg-[white]" >
-                <div className="h-[70px] flex items-center">
+                <form onSubmit={sendMessageHandler} className="h-[70px] flex items-center">
                     <input type="text" placeholder="Type somthing to send"
                         className="text-[black] outline-none pl-[20px] flex-1"
+                        onChange={(e) => setMessage(e.target.value)}
+                        value={message}
                     />
                     <div className="pr-[20px]">
-                        <button>
+                        <button  >
                             <SVG.Send w={24} h={24} />
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     );

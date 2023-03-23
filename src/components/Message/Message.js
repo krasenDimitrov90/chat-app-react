@@ -2,11 +2,11 @@ import React from "react";
 
 import './Message.styles.scss';
 
-const Message = ({ side, hasAvatar }) => {
+const Message = ({ message, side, hasAvatar }) => {
 
     const containerClasses = `flex ${side === 'right' ? 'justify-end' : 'justify-start'} px-[30px] my-[10px]`;
     let messagesClasses = `${side === 'left' ? 'message-text-container-left' : 'message-text-container-right'}`
-    messagesClasses += ' flex  max-w-[500px] mx-[40px] rounded-[3px] p-[20px] ';
+    messagesClasses += ' flex  max-w-[500px] mx-[40px] rounded-[3px] px-[20px] py-[10px] ';
     return (
         <div className={containerClasses}>
             <div className="flex basis-[50px]">
@@ -16,9 +16,7 @@ const Message = ({ side, hasAvatar }) => {
             </div>
             <div className={messagesClasses}>
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit repudiandae ab
-                    minima sunt earum totam et error, velit eius doloremque laboriosam adipisci
-                    temporibus rerum, voluptate molestiae magnam sint accusantium qui!
+                    {message}
                 </p>
             </div>
             <div className="flex basis-[50px]">

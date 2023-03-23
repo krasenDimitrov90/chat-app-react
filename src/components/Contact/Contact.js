@@ -2,12 +2,12 @@ import React from "react";
 
 import './Contact.styles.scss';
 
-const Contact = ({ name, messagesCount, online }) => {
+const Contact = ({ name, peerId, messagesCount, online, onClick }) => {
 
-    const avatarClasses = `avatar-container ${online ? 'online' : 'offline' }`;
+    const avatarClasses = `avatar-container ${online ? 'online' : 'offline'}`;
 
     return (
-        <div className="flex py-[20px]">
+        <div onClick={onClick.bind(null, { name, peerId })} className="transition duration-300 ease-in-out flex py-[20px] cursor-pointer hover:bg-[#373658]">
             <div className="flex flex-1 px-[20px] items-center">
                 <div className={avatarClasses}>
                     <img src="https://avatars.akamai.steamstatic.com/4f052355543f6a3ddd526e0a2dc182421e922798_full.jpg" alt=""
