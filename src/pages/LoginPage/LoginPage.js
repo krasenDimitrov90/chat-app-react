@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../context/auth-context";
 import useHttp from "../../hooks/use-http";
 import { socket } from "../../socket";
@@ -6,10 +7,12 @@ import { socket } from "../../socket";
 
 const LoginPage = () => {
 
+    const navigate = useNavigate();
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const { sendRequest, isLoding, error, data } = useHttp();
-    const { login } = useAuthContext();
+    const { login, isLoggedIn } = useAuthContext();
+
 
     const onEmailInputChange = (e) => setEmail(e.target.value);
     const onPasswordInputChange = (e) => setPassword(e.target.value);

@@ -6,7 +6,7 @@ import { AuthProvider } from './context/auth-context';
 import MessagesContextProvider from './context/messages-context';
 import { SocketContextProvider } from './context/socket-context';
 import ChatPage from './pages/ChatPage/ChatPage';
-import DashBoardPage from './pages/DashBoardPage/DashBoardPage';
+import DashBoard from './pages/DashBoardPage/DashBoardPage';
 import HomePage from './pages/HomePage/HomePage';
 import LoginPage from './pages/LoginPage/LoginPage';
 
@@ -14,14 +14,11 @@ import LoginPage from './pages/LoginPage/LoginPage';
 const router = createBrowserRouter([
   {
     path: '/',
-    // element: <Layout />,
-    // errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <HomePage /> },
-      // { index: true, element: <Navigate to="/login" replace /> },
+      { path: '/', element: <HomePage /> },
       { path: '/login', element: <LoginPage /> },
       { path: '/chat', element: <ChatPage /> },
-      { path: '/dashboard', element: <DashBoardPage /> },
+      { path: '/dashboard', element: <DashBoard /> },
     ]
   }
 ]);

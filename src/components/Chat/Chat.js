@@ -1,15 +1,10 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 import { useMessagesContext } from "../../context/messages-context";
 import { useSocket } from "../../context/socket-context";
 import { SVG } from "../../SVG";
 import Message from "../Message/Message";
 
 const Chat = ({ peerId, name, online }) => {
-
-
-    const location = useLocation();
-    // const { peerId } = location.state || '';
 
     const { sendPrivateMessage } = useSocket();
     const { getMessagesFromPeer, setMessagesHandler } = useMessagesContext();
@@ -23,6 +18,24 @@ const Chat = ({ peerId, name, online }) => {
 
         sendPrivateMessage(message, peerId);
         setMessagesHandler([{ message, isOwner: true }], peerId);
+        setMessage('');
+    };
+
+    const renderMessages = () => {
+        return messages.map((m, i) => {
+            const side = m.isOwner ? 'right' : 'left';
+            let hasAvatar;
+            if (i === 0) {
+                currentMessageOwner = m.isOwner;
+                hasAvatar = true;
+            } else {
+                hasAvatar = currentMessageOwner === m.isOwner ? false : true;
+                currentMessageOwner = m.isOwner;
+            }
+            return (
+                <Message key={i} message={m.message} side={side} hasAvatar={hasAvatar} />
+            );
+        })
     };
 
     return (
@@ -39,20 +52,7 @@ const Chat = ({ peerId, name, online }) => {
                 </div>
             </div>
             <div className=" bg-[#dcdef7] flex-1 overflow-y-scroll scroll-hide">
-                {messages.map((m, i) => {
-                    const side = m.isOwner ? 'right' : 'left';
-                    let hasAvatar;
-                    if (i === 0) {
-                        currentMessageOwner = m.isOwner;
-                        hasAvatar = true;
-                    } else {
-                        hasAvatar = currentMessageOwner === m.isOwner ? false : true;
-                        currentMessageOwner = m.isOwner;
-                    }
-                    return (
-                        <Message message={m.message} side={side} hasAvatar={hasAvatar} />
-                    );
-                })}
+                {renderMessages()}
             </div>
             <div className="bg-[white]" >
                 <form onSubmit={sendMessageHandler} className="h-[70px] flex items-center">

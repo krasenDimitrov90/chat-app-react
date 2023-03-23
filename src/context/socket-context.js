@@ -3,7 +3,7 @@ import { socket } from "../socket";
 import { useAuthContext } from "./auth-context";
 import { useMessagesContext } from "./messages-context";
 
-const SocketContext = React.createContext();
+export const SocketContext = React.createContext();
 
 export const useSocket = () => React.useContext(SocketContext);
 
@@ -17,9 +17,11 @@ export const setMessagesInLocalStorage = (messages, from) => {
 
 const SocketContextProvider = ({ children }) => {
 
-    const { setMessagesHandler} = useMessagesContext();
+    const { setMessagesHandler } = useMessagesContext();
     const { userToken } = useAuthContext();
     const [users, setUsers] = React.useState([]);
+
+    console.log(users);
 
 
     React.useEffect(() => {
@@ -37,7 +39,7 @@ const SocketContextProvider = ({ children }) => {
         });
 
         socket.on('unreceived-messages', (messages, from) => {
-            
+
             let newMessages = messages.reduce((acc, message) => {
                 acc.push({ message, isOwner: false });
                 return acc;
@@ -49,6 +51,7 @@ const SocketContextProvider = ({ children }) => {
 
 
         socket.on('users', (users) => {
+            console.log('ÚSERS');
             setUsers(users);
         });
 
@@ -57,7 +60,16 @@ const SocketContextProvider = ({ children }) => {
         });
 
         socket.on('user-left', (userId) => {
-            // console.log(userId + ' has left');
+            setUsers(prev => {
+                let newUsers = [...prev];
+                let index = newUsers.findIndex(u => {
+                    return u.userId === userId;
+                });
+                if (index > -1) {
+                    newUsers.splice(index, 1);
+                }
+                return newUsers;
+            })
         });
 
         return () => {
@@ -83,6 +95,7 @@ const SocketContextProvider = ({ children }) => {
 
     const value = {
         sendPrivateMessage,
+        users,
     };
 
     return (
