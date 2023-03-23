@@ -7,9 +7,13 @@ import Message from "../Message/Message";
 const Chat = ({ peerId, name, online }) => {
 
     const { sendPrivateMessage } = useSocket();
-    const { getMessagesFromPeer, setMessagesHandler } = useMessagesContext();
+    const { getMessagesFromPeer, setMessagesHandler, clearUnreadedMessagesFromPeer } = useMessagesContext();
     const messages = getMessagesFromPeer(peerId);
     const [message, setMessage] = React.useState('');
+
+    React.useEffect(() => {
+        clearUnreadedMessagesFromPeer(peerId);
+    }, [peerId]);
 
     let currentMessageOwner = null;
 

@@ -17,7 +17,7 @@ export const setMessagesInLocalStorage = (messages, from) => {
 
 const SocketContextProvider = ({ children }) => {
 
-    const { setMessagesHandler } = useMessagesContext();
+    const { setMessagesHandler, setUnreadedMessagesHandler } = useMessagesContext();
     const { userToken } = useAuthContext();
     const [users, setUsers] = React.useState([]);
 
@@ -46,6 +46,7 @@ const SocketContextProvider = ({ children }) => {
             }, []);
             // setMessagesInLocalStorage(newMessages, from);
             setMessagesHandler(newMessages, from);
+            setUnreadedMessagesHandler(messages.length, from);
         });
 
 
@@ -57,6 +58,7 @@ const SocketContextProvider = ({ children }) => {
 
         socket.on('private-message', ({ message, from }) => {
             setMessagesHandler([{ message, isOwner: false }], from);
+            setUnreadedMessagesHandler(1, from);
         });
 
         socket.on('user-left', (userId) => {

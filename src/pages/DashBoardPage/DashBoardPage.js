@@ -11,6 +11,7 @@ import { SVG } from "../../SVG";
 
 const DashBoard = () => {
 
+    
     const [peerIdToChatWith, setPeerIdToChatWith] = React.useState(null);
     const { getUserCredentials } = useAuthContext();
     const { userEmail } = getUserCredentials();
@@ -79,7 +80,7 @@ const DashBoard = () => {
                             key={p.id}
                             name={p.name}
                             peerId={p.id}
-                            messagesCount={i + 1}
+                            // messagesCount={unreadedMessages[p.id]}
                             online={users.some(u => u.userId === p.id)}
                             onClick={goChatWeedPeer}
                         />
