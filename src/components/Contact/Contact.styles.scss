@@ -1,0 +1,20 @@
+.avatar-container {
+    position: relative;
+}
+
+.avatar-container.online::before,
+.avatar-container.offline::before {
+    content: " ";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #00cf4b;
+    border: 2px solid black;
+    border-radius: 50%;
+    top: 6px;
+    right: 0px;
+}
+
+.avatar-container.offline::before {
+    background-color: #5e5c8e;
+}

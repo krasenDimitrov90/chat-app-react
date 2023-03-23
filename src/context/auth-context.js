@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
         if (userToken) {
             setIsLoggedIn(true);
         }
+
     }, [isLoggedIn, userToken]);
 
     const getUserCredentials = () => {
@@ -32,6 +33,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('token', token);
         localStorage.setItem('userId', userId);
         localStorage.setItem('userEmail', email);
+        localStorage.removeItem('allMessages');
         setIsLoggedIn(true);
     };
 

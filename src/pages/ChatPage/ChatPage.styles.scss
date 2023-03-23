@@ -28,3 +28,25 @@
     }
     
 }
+
+.message,
+.owner-message {
+    display: flex;
+
+
+    p {
+        background: yellow;
+        display: flex;
+        padding: 2px 10px;
+        border-radius: 8px;
+        margin: 4px 0;
+    }
+}
+
+.message {
+justify-content: flex-start
+}
+
+.owner-message {
+    justify-content: flex-end;
+}

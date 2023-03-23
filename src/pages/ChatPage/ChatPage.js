@@ -1,6 +1,5 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import Message from "../../components/Message";
 import { useMessagesContext } from "../../context/messages-context";
 import { useSocket } from "../../context/socket-context";
 
@@ -11,8 +10,8 @@ const ChatPage = () => {
     const location = useLocation();
     const { peerId } = location.state || '';
 
-    const {   sendPrivateMessage } = useSocket();
-    const {getMessagesFromPeer, setMessagesHandler} = useMessagesContext();
+    const { sendPrivateMessage } = useSocket();
+    const { getMessagesFromPeer, setMessagesHandler } = useMessagesContext();
     const messages = getMessagesFromPeer(peerId);
     // const { sendPrivateMessage } = useSocket();
     // const [messages, setMessages] = React.useState([]);
@@ -20,8 +19,10 @@ const ChatPage = () => {
 
     // React.useEffect(() => {
     //     const unreceivedMessages = JSON.parse(localStorage.getItem('messagesFrom:' + peerId)) || [];
-    //     setMessages((prev) => [...prev, ...unreceivedMessages]);
-    // },[]);
+    //     // setMessages((prev) => [...prev, ...unreceivedMessages]);
+    //     setMessagesHandler(unreceivedMessages, peerId);
+    //     return () => localStorage.removeItem('messagesFrom:' + peerId);
+    // }, []);
 
     console.log(messages);
     const sendMessageHandler = (e) => {
@@ -29,6 +30,16 @@ const ChatPage = () => {
 
         sendPrivateMessage(message, peerId);
         setMessagesHandler([{ message, isOwner: true }], peerId);
+    };
+
+
+    const Message = ({ message, isOwner }) => {
+
+        return (
+            <div className={isOwner ? "owner-message" : "message"}>
+                <p>{message}</p>
+            </div>
+        );
     };
 
 

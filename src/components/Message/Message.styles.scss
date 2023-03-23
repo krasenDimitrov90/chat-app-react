@@ -1,0 +1,39 @@
+
+.message-text-container-left,
+.message-text-container-right {
+    position: relative;
+}
+
+.message-text-container-left {
+    background-color: white;
+    color: black;
+}
+
+.message-text-container-right {
+    background-color: #86a0ff;
+    color: white;
+}
+
+.message-text-container-left::before {
+    content: " ";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 20px 10px 0;
+    border-color: transparent white transparent transparent;
+    top: 0;
+    left: -8px;
+}
+
+.message-text-container-right::after {
+    content: " ";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 20px 0 0;
+    border-color: #86a0ff  transparent transparent transparent;;
+    top: 0;
+    right: -8px;
+}

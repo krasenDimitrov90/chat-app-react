@@ -7,6 +7,18 @@ const MessagesContextProvider = ({ children }) => {
 
     const [messages, setMessages] = React.useState({});
 
+    React.useEffect(() => {
+        setMessages(prev => {
+            return  JSON.parse(localStorage.getItem('allMessages')) || {};
+        });
+    },[]);
+
+    React.useEffect(() => {
+        if (Object.keys(messages).length > 0) {
+            localStorage.setItem('allMessages', JSON.stringify(messages));
+        }
+    },[messages]);
+
     const setMessagesHandler = React.useCallback((message, from) => {
 
         setMessages(prev => {

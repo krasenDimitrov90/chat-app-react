@@ -18,24 +18,9 @@ export const setMessagesInLocalStorage = (messages, from) => {
 const SocketContextProvider = ({ children }) => {
 
     const { setMessagesHandler} = useMessagesContext();
-    // const [messages, setMessages] = React.useState({});
     const { userToken } = useAuthContext();
     const [users, setUsers] = React.useState([]);
 
-    // const setMessagesHandler = React.useCallback((message, from) => {
-
-    //     setMessages(prev => {
-    //         console.log(prev);
-    //         const currentMessagesFromSender = prev[from] || [];
-    //         // messages[from] = [...currentMessagesFromSender, messages];
-    //         let updatedMessages = [...currentMessagesFromSender, ...message];
-    //         return { ...prev, [from]: updatedMessages };
-    //     });
-    // });
-
-    // const getMessagesFromPeer = React.useCallback((from) => {
-    //     return messages[from] || [];
-    // });
 
     React.useEffect(() => {
         if (userToken) {
@@ -52,19 +37,12 @@ const SocketContextProvider = ({ children }) => {
         });
 
         socket.on('unreceived-messages', (messages, from) => {
-            // setMessages(prev => {
-            //     let newMessages = [...prev];
-            //     messages.reduce((acc, message) => {
-            //         acc.push({ message, isOwner: false });
-            //         return acc;
-            //     }, newMessages);
-            //     return newMessages;
-            // });
+            
             let newMessages = messages.reduce((acc, message) => {
                 acc.push({ message, isOwner: false });
                 return acc;
             }, []);
-            setMessagesInLocalStorage(newMessages, from);
+            // setMessagesInLocalStorage(newMessages, from);
             setMessagesHandler(newMessages, from);
         });
 
@@ -75,11 +53,7 @@ const SocketContextProvider = ({ children }) => {
         });
 
         socket.on('private-message', ({ message, from }) => {
-            // setMessages(prev => [...prev, { message, isOwner: false }]);
-            // setMessagesInLocalStorage([{ message, isOwner: false }], from);
-            // console.log('IN ON-PRIVATE-MESSAGE RECEIVING', { from });
             setMessagesHandler([{ message, isOwner: false }], from);
-
         });
 
         socket.on('user-left', (userId) => {
@@ -103,18 +77,12 @@ const SocketContextProvider = ({ children }) => {
             message,
             to,
         });
-        // setMessages(prev => [...prev, { message, isOwner: true }]);
-        // const userId = localStorage.getItem('userId');
-        // setMessagesHandler([{ message, isOwner: true }], userId);
     };
 
 
 
     const value = {
-        // messages,
         sendPrivateMessage,
-        // setMessagesHandler,
-        // getMessagesFromPeer,
     };
 
     return (
