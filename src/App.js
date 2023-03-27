@@ -9,6 +9,7 @@ import ChatPage from './pages/ChatPage/ChatPage';
 import DashBoard from './pages/DashBoardPage/DashBoardPage';
 import HomePage from './pages/HomePage/HomePage';
 import LoginPage from './pages/LoginPage/LoginPage';
+import RegisterPage from './pages/RegisterPage/RegisterPage';
 
 
 const router = createBrowserRouter([
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/login', element: <LoginPage /> },
+      { path: '/register', element: <RegisterPage /> },
       { path: '/chat', element: <ChatPage /> },
       { path: '/dashboard', element: <DashBoard /> },
     ]

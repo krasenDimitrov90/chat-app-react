@@ -4,20 +4,21 @@ import Button from "../../components/Button/Button";
 import FormCard from "../../components/FormCard/FormCard";
 import InputField from "../../components/InputField/InputField";
 import Loader from "../../components/Loader/Loader";
-import { useAuthContext } from "../../context/auth-context";
 import useHttp from "../../hooks/use-http";
 import useInput from "../../hooks/use-input";
 import { SVG } from "../../SVG";
 
-import './LoginPage.styles.scss';
+import './RegisterPage.styles.scss';
+
+
 
 const emailValidator = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-const LoginPage = () => {
+
+const RegisterPage = () => {
 
     const navigate = useNavigate();
     const [formIsInvalid, setFormIsInvalid] = React.useState(false);
-    const { sendRequest, isLoading, error, data } = useHttp();
-    const { login, isLoggedIn } = useAuthContext();
+    const { isLoading, sendRequest, error } = useHttp();
 
 
     const {
@@ -36,32 +37,57 @@ const LoginPage = () => {
         onChangeHandler: passwordInputOnChangeHandler,
         onBlurHandler: passwordInputOnBlurHandler,
         resetInput: resetPasswordInput,
-    } = useInput(value => value.trim().length >= 6);
+    } = useInput(value => value.length > 5);
+
+    const {
+        value: repeatPassword,
+        valueIsValid: repeatPasswordIsValid,
+        hasError: repeatPasswordInputHasError,
+        onChangeHandler: repeatPasswordInputOnChangeHandler,
+        onBlurHandler: repeatPasswordInputBlurHandler,
+        resetInput: resetRepeatPasswordInput,
+    } = useInput((value) => enteredPassword === value);
+
+
 
     React.useEffect(() => {
-        if (!enteredEmailIsValid || !enteredPasswordIsValid) {
+        if (!enteredEmailIsValid || !enteredPasswordIsValid || !repeatPasswordIsValid || enteredPassword !== repeatPassword) {
             setFormIsInvalid(true);
         } else {
             setFormIsInvalid(false);
         }
-    }, [enteredEmailIsValid, enteredPasswordIsValid]);
+    }, [enteredEmailIsValid, enteredPasswordIsValid, repeatPasswordIsValid, enteredPassword, repeatPassword]);
 
 
-    const loginHandler = (userData) => {
-        if (userData.hasOwnProperty('idToken')) {
-            login(userData.idToken, userData.localId, userData.email);
-            navigate('/dashboard');
-        }
+    const registerHandler = (userData) => {
+        const { localId, email } = userData;
+        const name = email.slice(0, email.indexOf('@'));
+        const data = {
+            [localId]: {
+                "email": email,
+                "name": name,
+                "peers": ""
+            }
+        };
+
+        const requestConfig = {
+            action: 'patch',
+            path: '/users',
+            data: data,
+        };
+
+        sendRequest(requestConfig, () => console.log('Success'));
     };
 
 
-    const submitHandler = (e) => {
+    const onSubmitHandler = (e) => {
         e.preventDefault();
 
         if (!enteredEmailIsValid) {
             return;
         }
-        if (!enteredPasswordIsValid) {
+
+        if (enteredPassword !== repeatPassword) {
             return;
         }
 
@@ -72,26 +98,25 @@ const LoginPage = () => {
         };
 
         const requestConfig = {
-            action: 'login',
+            action: 'register',
             data: data,
         };
 
-        sendRequest(requestConfig, loginHandler);
+        sendRequest(requestConfig, registerHandler);
 
         resetEmailInput();
         resetPasswordInput();
+        resetRepeatPasswordInput();
     };
-
 
     return (
         <>
             {isLoading && <Loader />}
-            {!isLoading && <div className="login-wrapper">
+            {!isLoading && <div className="register-wrapper">
                 <img src="https://media.istockphoto.com/id/1371726643/photo/different-notifications-on-violet-background-pop-up-messages-copy-space.jpg?b=1&s=170667a&w=0&k=20&c=FhmBYUrsGsR0hYn5zEDa0SkEFfF-rwuUfMEZ4HpX0rE=" alt="" />
-                <FormCard submitHandler={submitHandler} formTitle={'LOG IN'} formIsInvalid={formIsInvalid}>
+                <FormCard submitHandler={onSubmitHandler} formTitle={'REGISTER'} btnName={"Register"} formIsInvalid={formIsInvalid}>
 
                     <InputField
-                        icon={<i className="fa-solid fa-user"></i>}
                         type="text"
                         id='email'
                         name='email'
@@ -104,7 +129,6 @@ const LoginPage = () => {
                     >{<SVG.User />}</InputField>
 
                     <InputField
-                        icon={<i className="fa-solid fa-lock"></i>}
                         type="password"
                         id='password'
                         name='password'
@@ -113,16 +137,28 @@ const LoginPage = () => {
                         onBlur={passwordInputOnBlurHandler}
                         onChange={passwordInputOnChangeHandler}
                         inputIsInvalid={passwordInputIsInvalid}
-                        invalidMessage='Incorect password!'
+                        invalidMessage='Password must have at least 6 characters!'
+                    >{<SVG.Lock />}</InputField>
+
+                    <InputField
+                        type="password"
+                        id='repeat-password'
+                        name='repeat-password'
+                        placeholder="Repeat password"
+                        value={repeatPassword}
+                        onBlur={repeatPasswordInputBlurHandler}
+                        onChange={repeatPasswordInputOnChangeHandler}
+                        inputIsInvalid={repeatPasswordInputHasError}
+                        invalidMessage={`Passwords does't match!`}
                     >{<SVG.Lock />}</InputField>
 
                     <Button
-                        title={"Login"}
+                        title={"Register"}
                         disabled={formIsInvalid}
                     />
                     <div className="text-[12px] mt-[12px]">
                         <p>
-                            You dont't have an acount <NavLink className={"text-[blue]"} to={'/register'} >Register</NavLink>
+                            You have an acount <NavLink className={"text-[blue]"} to={'/login'} >Login</NavLink>
                         </p>
                     </div>
                 </FormCard>
@@ -131,4 +167,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default RegisterPage;
