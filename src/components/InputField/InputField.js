@@ -22,7 +22,7 @@ const InputField = (props) => {
                         onBlur={props.onBlur}
                     />
                 </div>
-                {props.inputIsInvalid && <p className="invalid-input">{props.invalidMessage}</p>}
+                {props.inputIsInvalid && <p className="text-[12px]">{props.invalidMessage}</p>}
             </div>
         </>
     );

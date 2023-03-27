@@ -4,6 +4,7 @@ import Button from "../../components/Button/Button";
 import FormCard from "../../components/FormCard/FormCard";
 import InputField from "../../components/InputField/InputField";
 import Loader from "../../components/Loader/Loader";
+import { useAuthContext } from "../../context/auth-context";
 import useHttp from "../../hooks/use-http";
 import useInput from "../../hooks/use-input";
 import { SVG } from "../../SVG";
@@ -19,6 +20,7 @@ const RegisterPage = () => {
     const navigate = useNavigate();
     const [formIsInvalid, setFormIsInvalid] = React.useState(false);
     const { isLoading, sendRequest, error } = useHttp();
+    const { login } = useAuthContext();
 
 
     const {
@@ -77,6 +79,10 @@ const RegisterPage = () => {
         };
 
         sendRequest(requestConfig, () => console.log('Success'));
+        if (userData.hasOwnProperty('idToken')) {
+            login(userData.idToken, userData.localId, userData.email);
+            navigate('/dashboard');
+        }
     };
 
 
