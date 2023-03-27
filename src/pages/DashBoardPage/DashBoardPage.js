@@ -1,8 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Chat from "../../components/Chat/Chat";
 import Contact from "../../components/Contact/Contact";
 import Empty from "../../components/Empty/Empty";
-import { useAuthContext } from "../../context/auth-context";
+import { AuthContext, useAuthContext } from "../../context/auth-context";
 import { SocketContext } from "../../context/socket-context";
 import useHttp from "../../hooks/use-http";
 import { SVG } from "../../SVG";
@@ -12,13 +13,14 @@ import { SVG } from "../../SVG";
 const DashBoard = () => {
 
     
+    const navigate = useNavigate();
     const [peerIdToChatWith, setPeerIdToChatWith] = React.useState(null);
-    const { getUserCredentials } = useAuthContext();
-    const { userEmail } = getUserCredentials();
+    // const { getUserCredentials } = useAuthContext();
+    const { getUserCredentials } = React.useContext(AuthContext);
+    const { userEmail, userId, userToken, isLoggedIn } = getUserCredentials();
     const socketCtx = React.useContext(SocketContext);
     const { users } = socketCtx;
     const [peers, setPeers] = React.useState([]);
-    const { userId, userToken } = getUserCredentials();
     const { sendRequest, isLoding, error, } = useHttp();
 
     const setPeersAfterFetch = React.useCallback((peers) => {
@@ -32,6 +34,11 @@ const DashBoard = () => {
 
     React.useEffect(() => {
 
+        if (!localStorage.getItem('token')) {
+            return () => navigate('/login');
+           
+        }
+
         const config = {
             action: 'get',
             path: `/users/${userId}/peers`,
@@ -40,11 +47,11 @@ const DashBoard = () => {
 
         sendRequest(config, setPeersAfterFetch);
 
-    }, []);
+    }, [userToken]);
 
     const goChatWeedPeer = React.useCallback((peer) => {
         setPeerIdToChatWith(peer);
-    }, []);
+    }, [isLoggedIn]);
 
     return (
         <div className="flex flex-1 h-[100vh] text-[#cbc9ee]">

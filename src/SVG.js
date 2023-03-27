@@ -70,4 +70,33 @@ export const SVG = {
             </svg>
         );
     },
+    User() {
+        return (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              color="#fff"
+              viewBox="0 0 1024 1024"
+            >
+              <path
+                fill="#fff"
+                d="M288 320a224 224 0 10448 0 224 224 0 10-448 0zm544 608H160a32 32 0 01-32-32v-96a160 160 0 01160-160h448a160 160 0 01160 160v96a32 32 0 01-32 32z"
+              ></path>
+            </svg>
+          );
+    },
+
+    Lock() {
+        return (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            // width="32"
+            // height="32"
+            fill="currentColor"
+            className="bi bi-lock-fill"
+            viewBox="0 0 16 16"
+          >
+            <path d="M8 1a2 2 0 012 2v4H6V3a2 2 0 012-2zm3 6V3a3 3 0 00-6 0v4a2 2 0 00-2 2v5a2 2 0 002 2h6a2 2 0 002-2V9a2 2 0 00-2-2z"></path>
+          </svg>
+        );
+      },
 }

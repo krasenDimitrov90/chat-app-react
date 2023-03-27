@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
 
     React.useEffect(() => {
 
+        console.log({isLoggedIn});
         if (userToken) {
             setIsLoggedIn(true);
         }

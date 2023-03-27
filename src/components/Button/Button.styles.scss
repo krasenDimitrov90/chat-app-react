@@ -1,0 +1,29 @@
+.btn-wrapper {
+    display: flex;
+    margin-top: 20px;
+}
+
+.btn {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #16a085;
+   
+}
+
+.btn:hover {
+    background-color: #0bb997;
+
+}
+
+.btn:disabled {
+    background-color: white;
+    cursor: context-menu;
+    color: #16a085;
+    border: 1px solid #16a085;
+}
