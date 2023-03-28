@@ -115,11 +115,6 @@ const LoginPage = () => {
         resetPasswordInput();
     };
 
-    // return (
-    //     <Modal>
-    //         <SuccessPopUp message={'Succesfuly logged in'} />
-    //     </Modal>
-    // );
 
     return (
         <>

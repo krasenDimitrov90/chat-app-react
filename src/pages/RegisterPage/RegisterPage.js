@@ -8,8 +8,12 @@ import { useAuthContext } from "../../context/auth-context";
 import useHttp from "../../hooks/use-http";
 import useInput from "../../hooks/use-input";
 import { SVG } from "../../SVG";
+import Modal from "../../components/Modal/Modal";
 
 import './RegisterPage.styles.scss';
+import usePopUp from "../../hooks/use-popUp";
+import ErrorPopUp from "../../components/ErrorPopUp/ErrorPopUp";
+import SuccessPopUp from "../../components/SuccessPopUp/SuccessPopUp";
 
 
 
@@ -21,6 +25,21 @@ const RegisterPage = () => {
     const [formIsInvalid, setFormIsInvalid] = React.useState(false);
     const { isLoading, sendRequest, error } = useHttp();
     const { login } = useAuthContext();
+
+    const afterRequestFinished = () => {
+        if (error) {
+            setFormIsInvalid(true);
+            navigate('/register');
+        } else {
+            navigate('/dashboard');
+        }
+    };
+
+    const {
+        modalIsOpen,
+        setModalIsOpen,
+        requestIsFinished,
+        setRequestIsFinished } = usePopUp(afterRequestFinished);
 
 
     const {
@@ -78,11 +97,19 @@ const RegisterPage = () => {
             data: data,
         };
 
-        sendRequest(requestConfig, () => console.log('Success'));
         if (userData.hasOwnProperty('idToken')) {
             login(userData.idToken, userData.localId, userData.email);
             navigate('/dashboard');
         }
+
+        sendRequest(requestConfig, () => console.log('Success'));
+        setRequestIsFinished(true);
+        setModalIsOpen(true);
+    };
+
+    const errorHandler = () => {
+        setModalIsOpen(true);
+        setRequestIsFinished(true);
     };
 
 
@@ -108,7 +135,7 @@ const RegisterPage = () => {
             data: data,
         };
 
-        sendRequest(requestConfig, registerHandler);
+        sendRequest(requestConfig, registerHandler, errorHandler);
 
         resetEmailInput();
         resetPasswordInput();
@@ -117,6 +144,11 @@ const RegisterPage = () => {
 
     return (
         <>
+            {modalIsOpen && requestIsFinished &&
+                <Modal>
+                    {error !== null && <ErrorPopUp message={'Email already exist!'} />}
+                    {error === null && <SuccessPopUp message={'Succesfuly registered'} />}
+                </Modal>}
             {isLoading && <Loader />}
             {!isLoading && <div className="register-wrapper">
                 <img src="https://media.istockphoto.com/id/1371726643/photo/different-notifications-on-violet-background-pop-up-messages-copy-space.jpg?b=1&s=170667a&w=0&k=20&c=FhmBYUrsGsR0hYn5zEDa0SkEFfF-rwuUfMEZ4HpX0rE=" alt="" />
