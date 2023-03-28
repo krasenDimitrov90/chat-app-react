@@ -94,9 +94,9 @@ const DashBoard = () => {
                     })}
                 </div>
                 <div className="flex h-[70px] items-center bg-[#474b7b]">
-                    <div className="px-[20px]">
+                    {/* <div className="px-[20px]">
                         <p>Vernone George</p>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             {!peerIdToChatWith && <Empty />}

@@ -4,20 +4,39 @@ import Button from "../../components/Button/Button";
 import FormCard from "../../components/FormCard/FormCard";
 import InputField from "../../components/InputField/InputField";
 import Loader from "../../components/Loader/Loader";
+import Modal from "../../components/Modal/Modal";
 import { useAuthContext } from "../../context/auth-context";
 import useHttp from "../../hooks/use-http";
 import useInput from "../../hooks/use-input";
 import { SVG } from "../../SVG";
+import usePopUp from "../../hooks/use-popUp";
 
 import './LoginPage.styles.scss';
+import SuccessPopUp from "../../components/SuccessPopUp/SuccessPopUp";
+import ErrorPopUp from "../../components/ErrorPopUp/ErrorPopUp";
 
 const emailValidator = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
 const LoginPage = () => {
 
     const navigate = useNavigate();
     const [formIsInvalid, setFormIsInvalid] = React.useState(false);
-    const { sendRequest, isLoading, error, data } = useHttp();
+    const { sendRequest, isLoading, error } = useHttp();
     const { login, isLoggedIn } = useAuthContext();
+
+    const afterRequestFinished = () => {
+        if (error) {
+            setFormIsInvalid(true);
+            navigate('/login');
+        } else {
+            navigate('/dashboard');
+        }
+    };
+
+    const {
+        modalIsOpen,
+        setModalIsOpen,
+        requestIsFinished,
+        setRequestIsFinished } = usePopUp(afterRequestFinished);
 
 
     const {
@@ -47,12 +66,26 @@ const LoginPage = () => {
     }, [enteredEmailIsValid, enteredPasswordIsValid]);
 
 
+    // const loginHandler = (userData) => {
+    //     if (userData.hasOwnProperty('idToken')) {
+    //         login(userData.idToken, userData.localId, userData.email);
+    //         navigate('/dashboard');
+    //     }
+    //     setModalIsOpen(true);
+    //     setRequestIsFinished(true);
+    // };
+
     const loginHandler = (userData) => {
-        if (userData.hasOwnProperty('idToken')) {
-            login(userData.idToken, userData.localId, userData.email);
-            navigate('/dashboard');
-        }
+        login(userData.idToken, userData.localId, userData.email);
+        setModalIsOpen(true);
+        setRequestIsFinished(true);
     };
+
+    const errorHandler = (err) => {
+        setModalIsOpen(true);
+        setRequestIsFinished(true);
+    };
+
 
 
     const submitHandler = (e) => {
@@ -76,22 +109,31 @@ const LoginPage = () => {
             data: data,
         };
 
-        sendRequest(requestConfig, loginHandler);
+        sendRequest(requestConfig, loginHandler, errorHandler);
 
         resetEmailInput();
         resetPasswordInput();
     };
 
+    // return (
+    //     <Modal>
+    //         <SuccessPopUp message={'Succesfuly logged in'} />
+    //     </Modal>
+    // );
 
     return (
         <>
+            {modalIsOpen && requestIsFinished &&
+                <Modal>
+                    {error !== null && <ErrorPopUp message={'Wrong email or password'} />}
+                    {error === null && <SuccessPopUp message={'Succesfuly logged in'} />}
+                </Modal>}
             {isLoading && <Loader />}
             {!isLoading && <div className="login-wrapper">
                 <img src="https://media.istockphoto.com/id/1371726643/photo/different-notifications-on-violet-background-pop-up-messages-copy-space.jpg?b=1&s=170667a&w=0&k=20&c=FhmBYUrsGsR0hYn5zEDa0SkEFfF-rwuUfMEZ4HpX0rE=" alt="" />
                 <FormCard submitHandler={submitHandler} formTitle={'LOG IN'} formIsInvalid={formIsInvalid}>
 
                     <InputField
-                        icon={<i className="fa-solid fa-user"></i>}
                         type="text"
                         id='email'
                         name='email'
@@ -104,7 +146,6 @@ const LoginPage = () => {
                     >{<SVG.User />}</InputField>
 
                     <InputField
-                        icon={<i className="fa-solid fa-lock"></i>}
                         type="password"
                         id='password'
                         name='password'
