@@ -1,0 +1,14 @@
+//bg-[#7874c0] flex py-[20px] logout
+.loggout {
+    display: flex;
+    padding: 20px 0;;
+    background-color: #5e5c8e;
+    transition: 0.3s;
+}
+
+.loggout.hide,
+.loggout.hide > div,
+.loggout.hide > div svg {
+    max-height: 0;
+    padding: 0;
+}

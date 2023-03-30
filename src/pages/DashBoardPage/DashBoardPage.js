@@ -8,6 +8,8 @@ import { SocketContext } from "../../context/socket-context";
 import useHttp from "../../hooks/use-http";
 import { SVG } from "../../SVG";
 
+import './DashBoard.styles.scss';
+
 
 
 const DashBoard = () => {
@@ -16,12 +18,20 @@ const DashBoard = () => {
     const navigate = useNavigate();
     const [peerIdToChatWith, setPeerIdToChatWith] = React.useState(null);
     // const { getUserCredentials } = useAuthContext();
-    const { getUserCredentials } = React.useContext(AuthContext);
+    const { getUserCredentials, loggout } = React.useContext(AuthContext);
     const { userEmail, userId, userToken, isLoggedIn } = getUserCredentials();
     const socketCtx = React.useContext(SocketContext);
     const { users } = socketCtx;
     const [peers, setPeers] = React.useState([]);
     const { sendRequest, isLoding, error, } = useHttp();
+    const [loggoutIsShown, setLoggoutIsShown] = React.useState(false);
+
+    const onMenuHandler = () => setLoggoutIsShown(prev => !prev);
+
+    const onLogoutHandler = () => {
+        loggout();
+        navigate('/login');
+    };
 
     const setPeersAfterFetch = React.useCallback((peers) => {
         const arrayOfPeers = Object.entries(peers).reduce((acc, [id, name]) => {
@@ -60,9 +70,15 @@ const DashBoard = () => {
                     <div className="flex-1 px-[20px]">
                         <h3>{userEmail}</h3>
                     </div>
-                    <div className="px-[20px]">
+                    <button onClick={onMenuHandler} className="px-[20px] cursor-pointer">
                         <SVG.Menu w={22} h={22} />
-                    </div>
+                    </button>
+                </div>
+                <div className={`${loggoutIsShown ? "loggout" : "loggout hide"} `}>
+                    <button onClick={onLogoutHandler} className="flex px-[20px] cursor-pointer">
+                        <SVG.Logout w={22} h={22} />
+                        <p className="ml-[10px]" >Logout</p>
+                    </button>
                 </div>
                 <div className=" bg-[#3f3d61] flex py-[20px] border-b-[#444266] border-b-[2px]">
                     <div className="flex flex-1 px-[20px]">
