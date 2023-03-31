@@ -107,6 +107,7 @@ const DashBoard = () => {
                             peerId={p.id}
                             online={users.some(u => u.userId === p.id)}
                             onClick={goChatWeedPeer}
+                            isChatingWithThisContact={peerIdToChatWith?.peerId === p.id}
                         />
                     })}
                 </div>

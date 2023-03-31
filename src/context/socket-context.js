@@ -21,8 +21,6 @@ const SocketContextProvider = ({ children }) => {
     const { userToken } = useAuthContext();
     const [users, setUsers] = React.useState([]);
 
-    console.log(users);
-
 
     React.useEffect(() => {
         if (userToken) {

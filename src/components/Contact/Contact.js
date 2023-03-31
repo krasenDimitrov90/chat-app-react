@@ -3,12 +3,11 @@ import { useMessagesContext } from "../../context/messages-context";
 
 import './Contact.styles.scss';
 
-const Contact = ({ name, peerId, online, onClick }) => {
-
+const Contact = ({ name, peerId, online, onClick, isChatingWithThisContact }) => {
+    console.log({peerId})
     const { unreadedMessages } = useMessagesContext();
     const [messagesCount, setMessagesCount] = React.useState();
     const avatarClasses = `avatar-container ${online ? 'online' : 'offline'}`;
-    console.log(unreadedMessages);
 
     React.useEffect(() => {
         setMessagesCount(unreadedMessages[peerId]);
@@ -26,7 +25,7 @@ const Contact = ({ name, peerId, online, onClick }) => {
                     <p>{name}</p>
                 </div>
             </div>
-            {messagesCount && messagesCount > 0 && <div className="px-[20px]">
+            {!isChatingWithThisContact && messagesCount && messagesCount > 0 && <div className="px-[20px]">
                 <div className="bg-[#00cf4b] w-[20px] leading-[20px] rounded-[50%] text-center text-[12px] text-[white]">
                     {messagesCount}
                 </div>
@@ -36,4 +35,4 @@ const Contact = ({ name, peerId, online, onClick }) => {
     );
 };
 
-export default Contact;
+export default React.memo(Contact);

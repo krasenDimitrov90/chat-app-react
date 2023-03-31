@@ -11,6 +11,14 @@ const Chat = ({ peerId, name, online }) => {
     const messages = getMessagesFromPeer(peerId);
     const [message, setMessage] = React.useState('');
 
+    const messagesContainerRef = React.useRef();
+    React.useEffect(() => {
+        console.log('in here');
+        if (messagesContainerRef.current) {
+            messagesContainerRef.current.scroll({ top: messagesContainerRef.current.scrollHeight, behavior: 'smooth' });
+        }
+    }, [messages]);
+
     React.useEffect(() => {
         clearUnreadedMessagesFromPeer(peerId);
     }, [peerId, messages]);
@@ -55,7 +63,7 @@ const Chat = ({ peerId, name, online }) => {
                     <p>{online ? 'Online' : 'Offline'}</p>
                 </div>
             </div>
-            <div className=" bg-[#dcdef7] flex-1 overflow-y-scroll scroll-hide">
+            <div ref={messagesContainerRef} className=" bg-[#dcdef7] flex-1 overflow-y-scroll scroll-hide">
                 {renderMessages()}
             </div>
             <div className="bg-[white]" >

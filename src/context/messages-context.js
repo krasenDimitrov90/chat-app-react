@@ -41,7 +41,6 @@ const MessagesContextProvider = ({ children }) => {
     const clearUnreadedMessagesFromPeer = React.useCallback((from) => {
 
         setUnreadedMessages(prev => {
-            console.log(prev.hasOwnProperty(from));
             if (prev.hasOwnProperty(from)) {
                 let coppy = { ...prev };
                 delete coppy[from];
