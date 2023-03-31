@@ -4,6 +4,7 @@ import Chat from "../../components/Chat/Chat";
 import Contact from "../../components/Contact/Contact";
 import Empty from "../../components/Empty/Empty";
 import { AuthContext } from "../../context/auth-context";
+import { useMessagesContext } from "../../context/messages-context";
 import { SocketContext } from "../../context/socket-context";
 import useHttp from "../../hooks/use-http";
 import { SVG } from "../../SVG";
@@ -17,6 +18,7 @@ const DashBoard = () => {
 
     const navigate = useNavigate();
     const [peerIdToChatWith, setPeerIdToChatWith] = React.useState(null);
+    const { clearAllMessages } = useMessagesContext();
     const { getUserCredentials, loggout } = React.useContext(AuthContext);
     const { userEmail, userId, userToken, isLoggedIn } = getUserCredentials();
     const socketCtx = React.useContext(SocketContext);
@@ -29,12 +31,16 @@ const DashBoard = () => {
 
     const onLogoutHandler = () => {
         loggout();
+        clearAllMessages();
         navigate('/login');
     };
 
     const setPeersAfterFetch = React.useCallback((peers) => {
-        const arrayOfPeers = Object.entries(peers).reduce((acc, [id, name]) => {
-            acc.push({ id, name });
+        const arrayOfPeers = Object.entries(peers).reduce((acc, [id, props]) => {
+            if (userId === id) {
+                return acc;
+            }
+            acc.push({ id, name: props.name });
             return acc;
         }, []);
         setPeers(arrayOfPeers);
@@ -50,7 +56,7 @@ const DashBoard = () => {
 
         const config = {
             action: 'get',
-            path: `/users/${userId}/peers`,
+            path: `/users`,
             token: userToken,
         };
 
@@ -90,11 +96,6 @@ const DashBoard = () => {
                             <input type="text" placeholder="Search"
                                 className="bg-[transparent] outline-none "
                             />
-                        </div>
-                    </div>
-                    <div className="px-[20px]">
-                        <div className="flex items-center">
-                            <SVG.Plus w={22} h={22} />
                         </div>
                     </div>
                 </div>

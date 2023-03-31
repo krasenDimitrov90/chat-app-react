@@ -13,16 +13,7 @@ const ChatPage = () => {
     const { sendPrivateMessage } = useSocket();
     const { getMessagesFromPeer, setMessagesHandler } = useMessagesContext();
     const messages = getMessagesFromPeer(peerId);
-    // const { sendPrivateMessage } = useSocket();
-    // const [messages, setMessages] = React.useState([]);
     const [message, setMessage] = React.useState('');
-
-    // React.useEffect(() => {
-    //     const unreceivedMessages = JSON.parse(localStorage.getItem('messagesFrom:' + peerId)) || [];
-    //     // setMessages((prev) => [...prev, ...unreceivedMessages]);
-    //     setMessagesHandler(unreceivedMessages, peerId);
-    //     return () => localStorage.removeItem('messagesFrom:' + peerId);
-    // }, []);
 
     console.log(messages);
     const sendMessageHandler = (e) => {

@@ -27,7 +27,7 @@ const MessagesContextProvider = ({ children }) => {
             let updatedMessages = [...currentMessagesFromSender, ...message];
             return { ...prev, [from]: updatedMessages };
         });
-    });
+    }, [messages]);
 
     const setUnreadedMessagesHandler = React.useCallback((messagesCount, from) => {
 
@@ -36,29 +36,32 @@ const MessagesContextProvider = ({ children }) => {
             currentUnreadedMessagesCount += messagesCount;
             return { ...prev, [from]: currentUnreadedMessagesCount };
         });
-    });
+    }, [messages]);
 
     const clearUnreadedMessagesFromPeer = React.useCallback((from) => {
 
         setUnreadedMessages(prev => {
             console.log(prev.hasOwnProperty(from));
             if (prev.hasOwnProperty(from)) {
-                let coppy = {...prev};
+                let coppy = { ...prev };
                 delete coppy[from];
                 return { ...coppy };
             } else {
                 return { ...prev };
             }
         });
-    });
+    }, [messages]);
 
 
     const getMessagesFromPeer = React.useCallback((from) => {
         return messages[from] || [];
-    });
+    }, [messages]);
+
+    const clearAllMessages = React.useCallback(() => setMessages({}), [messages]);
 
     const value = {
         messages,
+        clearAllMessages,
         unreadedMessages,
         setMessagesHandler,
         getMessagesFromPeer,
