@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Chat from "../../components/Chat/Chat";
 import Contact from "../../components/Contact/Contact";
 import Empty from "../../components/Empty/Empty";
-import { AuthContext, useAuthContext } from "../../context/auth-context";
+import { AuthContext } from "../../context/auth-context";
 import { SocketContext } from "../../context/socket-context";
 import useHttp from "../../hooks/use-http";
 import { SVG } from "../../SVG";
@@ -14,10 +14,9 @@ import './DashBoard.styles.scss';
 
 const DashBoard = () => {
 
-    
+
     const navigate = useNavigate();
     const [peerIdToChatWith, setPeerIdToChatWith] = React.useState(null);
-    // const { getUserCredentials } = useAuthContext();
     const { getUserCredentials, loggout } = React.useContext(AuthContext);
     const { userEmail, userId, userToken, isLoggedIn } = getUserCredentials();
     const socketCtx = React.useContext(SocketContext);
@@ -46,7 +45,7 @@ const DashBoard = () => {
 
         if (!localStorage.getItem('token')) {
             return () => navigate('/login');
-           
+
         }
 
         const config = {
@@ -75,10 +74,12 @@ const DashBoard = () => {
                     </button>
                 </div>
                 <div className={`${loggoutIsShown ? "loggout" : "loggout hide"} `}>
-                    <button onClick={onLogoutHandler} className="flex px-[20px] cursor-pointer">
-                        <SVG.Logout w={22} h={22} />
-                        <p className="ml-[10px]" >Logout</p>
-                    </button>
+                    <div className="logout-btn-container">
+                        <button onClick={onLogoutHandler} className="flex px-[20px] cursor-pointer">
+                            <SVG.Logout w={22} h={22} />
+                            <p className="ml-[10px]" >Logout</p>
+                        </button>
+                    </div>
                 </div>
                 <div className=" bg-[#3f3d61] flex py-[20px] border-b-[#444266] border-b-[2px]">
                     <div className="flex flex-1 px-[20px]">
@@ -103,14 +104,13 @@ const DashBoard = () => {
                             key={p.id}
                             name={p.name}
                             peerId={p.id}
-                            // messagesCount={unreadedMessages[p.id]}
                             online={users.some(u => u.userId === p.id)}
                             onClick={goChatWeedPeer}
                         />
                     })}
                 </div>
                 <div className="flex h-[70px] items-center bg-[#474b7b]">
-                    
+
                 </div>
             </div>
             {!peerIdToChatWith && <Empty />}

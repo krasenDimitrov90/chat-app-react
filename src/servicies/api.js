@@ -48,8 +48,8 @@ const request = (method, url, requestConfig = {}) => {
 
 
 export const api = {
-    login_URL: 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDTiWEXA80npiCFJjTRNGSxpdj2N2GinmU',
-    register_URL: 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDTiWEXA80npiCFJjTRNGSxpdj2N2GinmU',
+    login_URL: process.env.REACT_APP_LOGIN_URL,
+    register_URL: process.env.REACT_APP_REGISTER_URL,
     host: 'https://chat-app-api-6bd4d-default-rtdb.europe-west1.firebasedatabase.app',
 
     get: (requestConfig) => request('GET', api.host, requestConfig),
