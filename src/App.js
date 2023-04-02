@@ -5,7 +5,6 @@ import './App.css';
 import { AuthProvider } from './context/auth-context';
 import MessagesContextProvider from './context/messages-context';
 import { SocketContextProvider } from './context/socket-context';
-import ChatPage from './pages/ChatPage/ChatPage';
 import DashBoard from './pages/DashBoardPage/DashBoardPage';
 import HomePage from './pages/HomePage/HomePage';
 import LoginPage from './pages/LoginPage/LoginPage';
@@ -19,7 +18,6 @@ const router = createBrowserRouter([
       { path: '/', element: <HomePage /> },
       { path: '/login', element: <LoginPage /> },
       { path: '/register', element: <RegisterPage /> },
-      // { path: '/chat', element: <ChatPage /> },
       { path: '/dashboard', element: <DashBoard /> },
     ]
   }

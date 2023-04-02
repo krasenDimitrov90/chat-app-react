@@ -24,7 +24,7 @@ const DashBoard = () => {
     const socketCtx = React.useContext(SocketContext);
     const { users } = socketCtx;
     const [peers, setPeers] = React.useState([]);
-    const { sendRequest, isLoding, error, } = useHttp();
+    const { sendRequest } = useHttp();
     const [loggoutIsShown, setLoggoutIsShown] = React.useState(false);
 
     const onMenuHandler = () => setLoggoutIsShown(prev => !prev);

@@ -33,7 +33,7 @@ const SocketContextProvider = ({ children }) => {
     React.useEffect(() => {
 
         socket.on('connect', () => {
-            console.log(socket.id);
+            console.log('CONECTED');
         });
 
         socket.on('unreceived-messages', (messages, from) => {
@@ -50,7 +50,6 @@ const SocketContextProvider = ({ children }) => {
 
 
         socket.on('users', (users) => {
-            console.log('ÚSERS');
             setUsers(users);
         });
 

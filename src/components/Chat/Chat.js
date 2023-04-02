@@ -13,9 +13,8 @@ const Chat = ({ peerId, name, online }) => {
 
     const messagesContainerRef = React.useRef();
     React.useEffect(() => {
-        console.log('in here');
         if (messagesContainerRef.current) {
-            messagesContainerRef.current.scroll({ top: messagesContainerRef.current.scrollHeight, behavior: 'smooth' });
+            messagesContainerRef.current.scroll({ top: messagesContainerRef.current.scrollHeight});
         }
     }, [messages]);
 
