@@ -20,7 +20,7 @@ const Chat = ({ peerId, name, online }) => {
 
     React.useEffect(() => {
         clearUnreadedMessagesFromPeer(peerId);
-    }, [peerId, messages]);
+    }, [peerId]);
 
     let currentMessageOwner = null;
 

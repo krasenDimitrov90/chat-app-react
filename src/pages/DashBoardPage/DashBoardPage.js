@@ -37,6 +37,7 @@ const DashBoard = () => {
 
     const setPeersAfterFetch = React.useCallback((peers) => {
         const arrayOfPeers = Object.entries(peers).reduce((acc, [id, props]) => {
+            console.log({userId, id});
             if (userId === id) {
                 return acc;
             }

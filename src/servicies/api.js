@@ -35,7 +35,6 @@ const request = (method, url, requestConfig = {}) => {
             return res.json();
         })
         .then(data => {
-            console.log(data);
             if (data === null) {
                 return {};
             }
