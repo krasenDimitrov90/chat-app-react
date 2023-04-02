@@ -1,17 +1,16 @@
 import React from "react";
-import { useMessagesContext } from "../../context/messages-context";
 
 import './Contact.styles.scss';
 
-const Contact = ({ name, peerId, online, onClick, isChatingWithThisContact }) => {
-    console.log({peerId})
-    const { unreadedMessages } = useMessagesContext();
-    const [messagesCount, setMessagesCount] = React.useState();
+const Contact = ({ name, peerId, online, onClick, isChatingWithThisContact, unreadedMessagesFromPeer }) => {
+    console.log({ peerId })
+    
+    const [messagesCount, setMessagesCount] = React.useState(0);
     const avatarClasses = `avatar-container ${online ? 'online' : 'offline'}`;
 
     React.useEffect(() => {
-        setMessagesCount(unreadedMessages[peerId]);
-    },[unreadedMessages]);
+        setMessagesCount(unreadedMessagesFromPeer);
+    }, [unreadedMessagesFromPeer]);
 
     return (
         <div onClick={onClick.bind(null, { name, peerId })} className="transition duration-300 ease-in-out flex py-[20px] cursor-pointer hover:bg-[#373658]">
@@ -25,7 +24,7 @@ const Contact = ({ name, peerId, online, onClick, isChatingWithThisContact }) =>
                     <p>{name}</p>
                 </div>
             </div>
-            {!isChatingWithThisContact && messagesCount && messagesCount > 0 && <div className="px-[20px]">
+            {!isChatingWithThisContact && messagesCount > 0 && <div className="px-[20px]">
                 <div className="bg-[#00cf4b] w-[20px] leading-[20px] rounded-[50%] text-center text-[12px] text-[white]">
                     {messagesCount}
                 </div>

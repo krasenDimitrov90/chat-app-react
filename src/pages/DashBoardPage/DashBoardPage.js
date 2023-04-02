@@ -18,7 +18,7 @@ const DashBoard = () => {
 
     const navigate = useNavigate();
     const [peerIdToChatWith, setPeerIdToChatWith] = React.useState(null);
-    const { clearAllMessages } = useMessagesContext();
+    const { clearAllMessages, unreadedMessages } = useMessagesContext();
     const { getUserCredentials, loggout } = React.useContext(AuthContext);
     const { userEmail, userId, userToken, isLoggedIn } = getUserCredentials();
     const socketCtx = React.useContext(SocketContext);
@@ -109,6 +109,7 @@ const DashBoard = () => {
                             online={users.some(u => u.userId === p.id)}
                             onClick={goChatWeedPeer}
                             isChatingWithThisContact={peerIdToChatWith?.peerId === p.id}
+                            unreadedMessagesFromPeer={unreadedMessages[p.id]}
                         />
                     })}
                 </div>
